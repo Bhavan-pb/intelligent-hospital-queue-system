@@ -58,11 +58,16 @@ public class AnalyticsService {
             avgWaitByDept.put(dept.getName(), waitMins);
         }
 
+        double overallAvgWait = avgWaitByDept.values().stream()
+                .mapToDouble(Double::doubleValue)
+                .average()
+                .orElse(0.0);
+
         metrics.setTotalPatientsToday(totalQueueEntries);
         metrics.setActiveDoctors(activeDocs);
         metrics.setWaitingPatients(waitingCount);
         metrics.setEmergencyCasesToday(emergencyCount);
-        metrics.setAvgWaitingTimeMinutes(waitingCount > 0 ? (waitingCount * 12.5) : 0.0);
+        metrics.setAvgWaitingTimeMinutes(overallAvgWait);
         metrics.setCompletedConsultationsToday(completedCount);
         metrics.setCancelledAppointmentsToday(cancelledCount);
         metrics.setNoShowRatePercentage(Math.round(noShowRate * 10.0) / 10.0);

@@ -40,11 +40,10 @@ public class WaitingTimeService {
             if (deptAvg != null && deptAvg > 0) {
                 avgMinutes = deptAvg;
             } else {
-                departmentRepository.findById(departmentId).ifPresent(d -> {
-                    if (d.getAvgConsultationMinutes() != null) {
-                        // use department default
-                    }
-                });
+                Department dept = departmentRepository.findById(departmentId).orElse(null);
+                if (dept != null && dept.getAvgConsultationMinutes() != null) {
+                    avgMinutes = dept.getAvgConsultationMinutes();
+                }
             }
         }
 
